@@ -90,6 +90,7 @@ public class HttpTrace3 extends HttpTrace implements IHttpTrace {
                 while(iter.hasNext()) {
                     TraceContext ctx = iter.next();
                     ctx.asyncThrowable = new ASYNC_SERVLET_TIMEOUT("exceed async servlet timeout! : " + asyncEvent.getAsyncContext().getTimeout() + "ms");
+                    TraceContextManager.completeDeferred(ctx);
                 }
             }
 
@@ -103,6 +104,7 @@ public class HttpTrace3 extends HttpTrace implements IHttpTrace {
                 while(iter.hasNext()) {
                     TraceContext ctx = iter.next();
                     ctx.asyncThrowable = asyncEvent.getThrowable();
+                    TraceContextManager.completeDeferred(ctx);
                 }
 
             }
