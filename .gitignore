@@ -15,6 +15,7 @@ scouter.server.boot/testlib
 scouter.client/lib/scouter.common.jar
 *.pyc
 Thumbs.db
+.DS_Store
 scouter.client/target/*
 scouter.client.feature/target/*
 scouter.client.product/target/*
