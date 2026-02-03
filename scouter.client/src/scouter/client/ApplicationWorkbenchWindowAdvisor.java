@@ -17,14 +17,22 @@
  */
 package scouter.client;
 
+import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.action.IContributionItem;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
+import org.eclipse.ui.internal.WorkbenchPlugin;
+import org.eclipse.ui.internal.WorkbenchWindow;
+import org.eclipse.ui.internal.registry.ActionSetRegistry;
+import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import scouter.Version;
 import scouter.client.misc.UpdateCheckScheduler;
 import scouter.client.notice.NoticeCheckScheduler;
@@ -65,7 +73,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	
 	IWorkbenchWindowConfigurer configurer;
 	
+	@SuppressWarnings("restriction")
 	public void preWindowOpen() {
+		removeUnwantedActionSets();
+
 		configurer = getWindowConfigurer();
 		configurer.setInitialSize(new Point(1440, 900));
 		configurer.setShowMenuBar(true);
@@ -79,8 +90,53 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		configurer.setTitle("Version - "+Version.getClientFullVersion() + "(" + TimeZone.getDefault().getDisplayName() + ")");
 	}
 	
+	@SuppressWarnings("restriction")
 	public void postWindowOpen() {
 		super.postWindowOpen();
+		removeUnwantedMenus();
+	}
+
+	@SuppressWarnings("restriction")
+	private void removeUnwantedMenus() {
+		IWorkbenchWindow window = getWindowConfigurer().getWindow();
+		if (window instanceof WorkbenchWindow) {
+			MenuManager menuManager = ((WorkbenchWindow) window).getMenuManager();
+			String[] idsToRemove = {
+				"org.eclipse.search.menu",
+				"org.eclipse.ui.run"
+			};
+			for (String id : idsToRemove) {
+				IContributionItem item = menuManager.find(id);
+				if (item != null) {
+					menuManager.remove(item);
+				}
+			}
+			// Also remove by label for any remaining items
+			for (IContributionItem item : menuManager.getItems()) {
+				if (item instanceof MenuManager) {
+					String label = ((MenuManager) item).getMenuText();
+					if (label != null && (label.equals("Search") || label.equals("Run")
+							|| label.equals("&Search") || label.equals("&Run"))) {
+						menuManager.remove(item);
+					}
+				}
+			}
+			menuManager.update(true);
+		}
+	}
+
+	@SuppressWarnings("restriction")
+	private void removeUnwantedActionSets() {
+		ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
+		IActionSetDescriptor[] actionSets = reg.getActionSets();
+		for (IActionSetDescriptor actionSet : actionSets) {
+			String id = actionSet.getId();
+			if (id.startsWith("org.eclipse.search") || id.startsWith("org.eclipse.ui.run")
+					|| id.startsWith("org.eclipse.debug") || id.startsWith("org.eclipse.ui.externaltools")) {
+				IExtension ext = actionSet.getConfigurationElement().getDeclaringExtension();
+				reg.removeExtension(ext, new Object[]{actionSet});
+			}
+		}
 	}
 
 	public void dispose() {
