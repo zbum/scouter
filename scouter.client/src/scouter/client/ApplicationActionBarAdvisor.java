@@ -47,7 +47,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(new OpenClientEnvViewAction(window));
 		register(new OpenWorkspaceExplorerAction(window, "Workspace Explorer", Images.explorer, serverId));
 		register(new ExportWorkspaceAction(window, "Export perspective settings", Images.explorer));
-		register(new ImportWorkspaceAction(window, "Import perspective settings", Images.explorer));
+		register(new ImportWorkspaceFromFileAction(window, "File", Images.explorer));
+		register(new ImportWorkspaceFromGitHubAction(window, "GitHub", Images.explorer));
 		register(new RestartAction(window, "Restart"));
 		
 		// Management
