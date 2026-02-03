@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(mvn --version:*)",
+      "Bash(find:*)",
+      "Bash(mvn clean verify:*)",
+      "Bash(./build_client.sh:*)",
+      "WebSearch",
+      "WebFetch(domain:jeanette.tistory.com)",
+      "Bash(open:*)",
+      "Bash(bash build_client.sh:*)",
+      "Bash(bash:*)"
+    ]
+  }
+}

@@ -22,11 +22,14 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.WorkbenchPlugin;
@@ -36,9 +39,12 @@ import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 import scouter.Version;
 import scouter.client.misc.UpdateCheckScheduler;
 import scouter.client.notice.NoticeCheckScheduler;
+import scouter.client.popup.ImportFromGitHubDialog;
 import scouter.client.remote.CheckMyJob;
 import scouter.client.threads.AlertProxyThread;
 import scouter.client.threads.SessionObserver;
+import scouter.client.util.ExUtil;
+import scouter.util.ThreadUtil;
 
 import java.util.TimeZone;
 
@@ -72,8 +78,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
 	
 	IWorkbenchWindowConfigurer configurer;
-	
-	@SuppressWarnings("restriction")
+
+    @SuppressWarnings("restriction")
 	public void preWindowOpen() {
 		removeUnwantedActionSets();
 
@@ -94,6 +100,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 	public void postWindowOpen() {
 		super.postWindowOpen();
 		removeUnwantedMenus();
+        checkGitHubSettings();
 	}
 
 	@SuppressWarnings("restriction")
@@ -137,6 +144,36 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				reg.removeExtension(ext, new Object[]{actionSet});
 			}
 		}
+		checkGitHubSettings();
+	}
+
+	private void checkGitHubSettings() {
+		ExUtil.asyncRun(() -> {
+			try {
+				ThreadUtil.sleep(3000);
+				if (ImportFromGitHubDialog.hasNewSettings()) {
+					Display.getDefault().asyncExec(() -> {
+						Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+						MessageDialog dialog = new MessageDialog(
+								shell,
+								"New Settings Available",
+								null,
+								"New workspace settings are available on GitHub.\nWould you like to import them now?",
+								MessageDialog.INFORMATION,
+								new String[] { "Import Now", "Remind Me Later", "Don't Ask for 30 Days" },
+								0);
+						int result = dialog.open();
+						if (result == 0) {
+							new ImportFromGitHubDialog(shell).open();
+						} else if (result == 2) {
+							ImportFromGitHubDialog.snooze30Days();
+						}
+					});
+				}
+			} catch (Exception e) {
+				// ignore
+			}
+		});
 	}
 
 	public void dispose() {
