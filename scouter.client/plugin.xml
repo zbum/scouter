@@ -1206,6 +1206,12 @@
                 id="scouter.client.actions.ImportWorkspaceFromGitHubAction"
                 name="Import Workspace From GitHub">
         </command>
+        <command
+                categoryId="scouter.client.category"
+                description="Switch Workspace"
+                id="scouter.client.actions.SwitchWorkspaceAction"
+                name="Switch Workspace">
+        </command>
     </extension>
     <extension
             point="org.eclipse.ui.bindings">
@@ -1257,6 +1263,12 @@
                             style="push">
                     </command>
                 </menu>
+                <separator name="file.separator3" visible="true"/>
+                <command
+                        commandId="scouter.client.actions.SwitchWorkspaceAction"
+                        label="Switch Workspace..."
+                        style="push">
+                </command>
                 <command
                         commandId="scouter.client.actions.RestartAction"
                         label="Restart"
