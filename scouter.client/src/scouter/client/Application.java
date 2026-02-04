@@ -33,6 +33,7 @@ import scouter.client.preferences.ServerPrefUtil;
 import scouter.client.server.Server;
 import scouter.client.server.ServerManager;
 import scouter.client.util.ClientFileUtil;
+import scouter.client.workspace.WorkspaceManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,7 @@ public class Application implements IApplication {
 //		instanceLocation.set(new URL("file", null, System.getProperty("user.home") + "/scouter-workspace-test"), false);
 		
 		String workspaceRootName = instanceLocation.getURL().getFile();
+		WorkspaceManager.getInstance().registerCurrentWorkspace(workspaceRootName);
 		String importWorkingDirName = workspaceRootName + separator+ "import-working";
 
 		try {
@@ -154,12 +156,18 @@ public class Application implements IApplication {
 		return autoLogined;
 	}
 
+	private static final Object EXIT_RELAUNCH = Integer.valueOf(24);
+
 	private Object createAndRunWorkbench(Display display) {
 		int returnCode = PlatformUI.createAndRunWorkbench(display, new ApplicationWorkbenchAdvisor());
-		if (returnCode == PlatformUI.RETURN_RESTART)
+		if (returnCode == PlatformUI.RETURN_RESTART) {
+			if ("true".equals(System.getProperty("scouter.workspace.switch"))) {
+				System.clearProperty("scouter.workspace.switch");
+				return EXIT_RELAUNCH;
+			}
 			return IApplication.EXIT_RESTART;
-		else
-			return IApplication.EXIT_OK;
+		}
+		return IApplication.EXIT_OK;
 	}
 
 	public void stop() {

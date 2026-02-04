@@ -1194,6 +1194,12 @@
                 id="scouter.client.actions.OpenServerManagerAction"
                 name="Open ServerManager">
         </command>
+        <command
+                categoryId="scouter.client.category"
+                description="Switch Workspace"
+                id="scouter.client.actions.SwitchWorkspaceAction"
+                name="Switch Workspace">
+        </command>
     </extension>
     <extension
             point="org.eclipse.ui.bindings">
@@ -1234,6 +1240,12 @@
                 <command
                         commandId="scouter.client.actions.ImportWorkspaceAction"
                         label="Import perspective settings"
+                        style="push">
+                </command>
+                <separator name="file.separator3" visible="true"/>
+                <command
+                        commandId="scouter.client.actions.SwitchWorkspaceAction"
+                        label="Switch Workspace..."
                         style="push">
                 </command>
                 <command

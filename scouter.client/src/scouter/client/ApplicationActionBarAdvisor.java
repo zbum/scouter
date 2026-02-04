@@ -48,6 +48,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 		register(new OpenWorkspaceExplorerAction(window, "Workspace Explorer", Images.explorer, serverId));
 		register(new ExportWorkspaceAction(window, "Export perspective settings", Images.explorer));
 		register(new ImportWorkspaceAction(window, "Import perspective settings", Images.explorer));
+		register(new SwitchWorkspaceAction(window, "Switch Workspace"));
 		register(new RestartAction(window, "Restart"));
 		
 		// Management

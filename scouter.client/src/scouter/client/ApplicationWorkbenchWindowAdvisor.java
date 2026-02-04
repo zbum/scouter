@@ -31,6 +31,7 @@ import scouter.client.notice.NoticeCheckScheduler;
 import scouter.client.remote.CheckMyJob;
 import scouter.client.threads.AlertProxyThread;
 import scouter.client.threads.SessionObserver;
+import scouter.client.workspace.WorkspaceManager;
 
 import java.util.TimeZone;
 
@@ -76,7 +77,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 		//configurer.setShowFastViewBars(false);
 		configurer.setShowPerspectiveBar(true);
 		
-		configurer.setTitle("Version - "+Version.getClientFullVersion() + "(" + TimeZone.getDefault().getDisplayName() + ")");
+		WorkspaceManager wm = WorkspaceManager.getInstance();
+		String wsName = wm.getDisplayName(wm.getCurrentWorkspacePath());
+		configurer.setTitle("Version - "+Version.getClientFullVersion() + " [" + wsName + "] (" + TimeZone.getDefault().getDisplayName() + ")");
 	}
 	
 	public void postWindowOpen() {
