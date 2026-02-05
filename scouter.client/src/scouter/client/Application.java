@@ -94,7 +94,8 @@ public class Application implements IApplication {
 			ServerPrefUtil.storeDefaultServer(server.getIp()+":"+server.getPort());
 			ServerManager.getInstance().setDefaultServer(server);
 		}, LoginDialog2.TYPE_STARTUP, null, null);
-		return (dialog.open() == Window.OK);
+		int result = dialog.open();
+		return (result == Window.OK || result == LoginDialog2.SKIP_LOGIN);
 	}
 
 
