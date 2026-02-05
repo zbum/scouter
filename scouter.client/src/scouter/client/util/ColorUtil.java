@@ -20,6 +20,8 @@ package scouter.client.util;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
+import scouter.client.preferences.PManager;
+import scouter.client.preferences.PreferenceConstants;
 
 import java.util.HashMap;
 
@@ -117,7 +119,142 @@ public class ColorUtil {
 		Display display = Display.getCurrent();
 		if (display == null) {
 			display = Display.getDefault();
-		}		
+		}
 		return display.getSystemColor(id);
+	}
+
+	// Dark mode support methods
+	public static boolean isDarkMode() {
+		return PManager.getInstance().getBoolean(PreferenceConstants.P_DARK_MODE);
+	}
+
+	// Theme color cache
+	private static Color chartBackground;
+	private static Color chartBackgroundDark;
+	private static Color chartForeground;
+	private static Color chartForegroundDark;
+	private static Color chartGridNarrow;
+	private static Color chartGridNarrowDark;
+	private static Color chartGridWide;
+	private static Color chartGridWideDark;
+	private static Color xlogIgnoreArea;
+	private static Color xlogIgnoreAreaDark;
+	private static Color chartBorder;
+	private static Color chartBorderDark;
+	private static Color filteredBackground;
+	private static Color filteredBackgroundDark;
+	private static Color axisGrid;
+	private static Color axisGridDark;
+
+	public static Color getChartBackground() {
+		if (isDarkMode()) {
+			if (chartBackgroundDark == null) {
+				chartBackgroundDark = new Color(null, 30, 30, 35);
+			}
+			return chartBackgroundDark;
+		} else {
+			if (chartBackground == null) {
+				chartBackground = new Color(null, 255, 255, 255);
+			}
+			return chartBackground;
+		}
+	}
+
+	public static Color getChartForeground() {
+		if (isDarkMode()) {
+			if (chartForegroundDark == null) {
+				chartForegroundDark = new Color(null, 200, 200, 210);
+			}
+			return chartForegroundDark;
+		} else {
+			if (chartForeground == null) {
+				chartForeground = new Color(null, 0, 0, 0);
+			}
+			return chartForeground;
+		}
+	}
+
+	public static Color getChartGridNarrow() {
+		if (isDarkMode()) {
+			if (chartGridNarrowDark == null) {
+				chartGridNarrowDark = new Color(null, 55, 55, 70);
+			}
+			return chartGridNarrowDark;
+		} else {
+			if (chartGridNarrow == null) {
+				chartGridNarrow = new Color(null, 220, 228, 255);
+			}
+			return chartGridNarrow;
+		}
+	}
+
+	public static Color getChartGridWide() {
+		if (isDarkMode()) {
+			if (chartGridWideDark == null) {
+				chartGridWideDark = new Color(null, 70, 70, 90);
+			}
+			return chartGridWideDark;
+		} else {
+			if (chartGridWide == null) {
+				chartGridWide = new Color(null, 200, 208, 255);
+			}
+			return chartGridWide;
+		}
+	}
+
+	public static Color getXLogIgnoreArea() {
+		if (isDarkMode()) {
+			if (xlogIgnoreAreaDark == null) {
+				xlogIgnoreAreaDark = new Color(null, 45, 45, 50);
+			}
+			return xlogIgnoreAreaDark;
+		} else {
+			if (xlogIgnoreArea == null) {
+				xlogIgnoreArea = new Color(null, 234, 234, 234);
+			}
+			return xlogIgnoreArea;
+		}
+	}
+
+	public static Color getChartBorderColor() {
+		if (isDarkMode()) {
+			if (chartBorderDark == null) {
+				chartBorderDark = new Color(null, 100, 100, 120);
+			}
+			return chartBorderDark;
+		} else {
+			if (chartBorder == null) {
+				chartBorder = new Color(null, 0, 0, 0);
+			}
+			return chartBorder;
+		}
+	}
+
+	public static Color getFilteredBackground() {
+		if (isDarkMode()) {
+			if (filteredBackgroundDark == null) {
+				filteredBackgroundDark = new Color(null, 30, 40, 50);
+			}
+			return filteredBackgroundDark;
+		} else {
+			if (filteredBackground == null) {
+				filteredBackground = new Color(null, 240, 255, 255);
+			}
+			return filteredBackground;
+		}
+	}
+
+	public static Color getAxisGridColor() {
+		if (isDarkMode()) {
+			if (axisGridDark == null) {
+				axisGridDark = new Color(null, 60, 60, 75);
+			}
+			return axisGridDark;
+		} else {
+			if (axisGrid == null) {
+				axisGrid = new Color(null, 200, 200, 200);
+			}
+			return axisGrid;
+		}
 	}
 }

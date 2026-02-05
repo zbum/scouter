@@ -201,7 +201,7 @@ public abstract class EQCommonView extends ViewPart implements RefreshThread.Ref
 			}
 			
 			// draw horizontal line
-			gc.setForeground(XLogViewPainter.color_grid_narrow);
+			gc.setForeground(ColorUtil.getChartGridNarrow());
 			gc.setLineStyle(SWT.LINE_DOT);
 			for (int i = AXIS_PADDING + unitHeight; i <= height - unitHeight; i = i + unitHeight) {
 				gc.drawLine(0, i, width, i);

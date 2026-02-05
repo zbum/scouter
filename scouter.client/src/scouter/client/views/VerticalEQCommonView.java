@@ -211,7 +211,7 @@ public abstract class VerticalEQCommonView extends ViewPart implements RefreshTh
 			}
 			
 			// draw horizontal line
-			gc.setForeground(XLogViewPainter.color_grid_narrow);
+			gc.setForeground(ColorUtil.getChartGridNarrow());
 			gc.setLineStyle(SWT.LINE_DOT);
 			for (int i = AXIS_PADDING + unitWidth; i <= width - unitWidth; i = i + unitWidth) {
 				gc.drawLine(i, 0, i, height);
