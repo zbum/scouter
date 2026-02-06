@@ -10,7 +10,12 @@
       "WebFetch(domain:jeanette.tistory.com)",
       "Bash(open:*)",
       "Bash(bash build_client.sh:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(xattr:*)",
+      "Bash(screencapture:*)",
+      "Bash(osascript:*)",
+      "Bash(grep:*)",
+      "Bash(pkill:*)"
     ]
   }
 }
