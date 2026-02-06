@@ -241,7 +241,7 @@ public class XLogViewPainter {
 
 			String s = FormatUtil.print(new Double(yValue + yValueMin), "#,##0.00");
 			gc.setForeground(ColorUtil.getChartForeground());
-			gc.drawString(s, chart_x - (15 + s.length() * 6), y - 5);
+			gc.drawString(s, chart_x - (15 + s.length() * 6), y - 5, true);
 		}
 		
 		double xUnit = ChartUtil.getSplitTimeUnit(xTimeRange, chart_w);
@@ -267,7 +267,7 @@ public class XLogViewPainter {
 			if (labelOn) {
 				gc.setForeground(ColorUtil.getChartForeground());
 				String s = FormatUtil.print(new Date(time_start + (long) timeDelta), xLabelFormat);
-				gc.drawString(s, x - 25, chart_y + chart_h + 5 + 5);
+				gc.drawString(s, x - 25, chart_y + chart_h + 5 + 5, true);
 			}
 		}
 
@@ -290,20 +290,20 @@ public class XLogViewPainter {
 	
 	private void drawZoomMode(GC gc, int chart_x, int chart_y, int chart_w, long stime, long etime) {
 		String cntText = "Zoom Mode(" + DateUtil.format(stime, "HH:mm") + "~" + DateUtil.format(etime, "HH:mm") + ")";
-		gc.drawText(cntText, chart_x + chart_w - 140, chart_y - 20);
+		gc.drawText(cntText, chart_x + chart_w - 140, chart_y - 20, true);
 	}
 
 	private void drawTxCount(GC gc, int chart_x, int chart_w, int chart_y) {
 		gc.setFont(null);
 		String cntText = " Count : " + FormatUtil.print(new Long(count), "#,##0");
 		int strLen = gc.stringExtent(cntText).x;
-		gc.drawText(cntText, chart_x + chart_w - strLen - 10, chart_y - 20);
+		gc.drawText(cntText, chart_x + chart_w - strLen - 10, chart_y - 20, true);
 	}
-	
+
 	private void drawYaxisDescription(GC gc, int chart_x, int chart_y) {
 		gc.setFont(null);
 		String desc = " " + yAxisMode.getDesc();
-		gc.drawText(desc, chart_x, chart_y - 20);
+		gc.drawText(desc, chart_x, chart_y - 20, true);
 	}
 
 	private void drawChartBorder(GC gc, int chart_sx, int chart_sy, int chart_w, int chart_h) {
