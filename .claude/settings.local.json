@@ -15,7 +15,19 @@
       "Bash(screencapture:*)",
       "Bash(osascript:*)",
       "Bash(grep:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(git init:*)",
+      "Bash(go mod tidy:*)",
+      "Bash(GOPATH=/Users/nhn/gopath go build:*)",
+      "Bash(GOPATH=/Users/nhn/gopath go test:*)",
+      "Bash(/tmp/scouter-server version:*)",
+      "Bash(xargs:*)",
+      "Bash(GOPATH=/Users/nhn/gopath make build:*)",
+      "Bash(./dist/scouter-server version:*)",
+      "Bash(GOPATH=/Users/nhn/gopath ./dist/scouter-server:*)",
+      "Bash(GOPATH=/Users/nhn/gopath make:*)",
+      "Bash(./dist/scouter-server)",
+      "Bash(lsof:*)"
     ]
   }
 }

@@ -32,7 +32,7 @@ public class WorkspaceManager {
 	private static WorkspaceManager instance;
 
 	private static final String CONFIG_FILE = System.getProperty("user.home")
-			+ File.separator + ".scouter-workspaces.properties";
+			+ File.separator + ".scouter" + File.separator + ".scouter-workspaces.properties";
 	private static final String KEY_COUNT = "workspace.count";
 	private static final String KEY_PATH_PREFIX = "workspace.path.";
 	private static final String KEY_NAME_PREFIX = "workspace.name.";
@@ -96,6 +96,20 @@ public class WorkspaceManager {
 		saveWorkspaceList(list);
 	}
 
+	public String getLastUsedWorkspacePath() {
+		List<WorkspaceInfo> list = getWorkspaceList();
+		if (list.isEmpty()) {
+			return null;
+		}
+		WorkspaceInfo lastUsed = null;
+		for (WorkspaceInfo info : list) {
+			if (lastUsed == null || info.getLastUsed() > lastUsed.getLastUsed()) {
+				lastUsed = info;
+			}
+		}
+		return lastUsed != null ? lastUsed.getPath() : null;
+	}
+
 	public String getCurrentWorkspacePath() {
 		try {
 			return Platform.getInstanceLocation().getURL().getFile();
@@ -145,7 +159,9 @@ public class WorkspaceManager {
 			props.setProperty(KEY_NAME_PREFIX + i, info.getDisplayName());
 			props.setProperty(KEY_LAST_USED_PREFIX + i, String.valueOf(info.getLastUsed()));
 		}
-		try (FileOutputStream fos = new FileOutputStream(CONFIG_FILE)) {
+		File configFile = new File(CONFIG_FILE);
+		configFile.getParentFile().mkdirs();
+		try (FileOutputStream fos = new FileOutputStream(configFile)) {
 			props.store(fos, "Scouter Workspace List");
 		} catch (IOException e) {
 			e.printStackTrace();

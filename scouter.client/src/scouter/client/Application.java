@@ -50,10 +50,18 @@ public class Application implements IApplication {
 
 	public Object start(IApplicationContext context) throws Exception {
 		Location instanceLocation = Platform.getInstanceLocation();
-//		if(instanceLocation.isSet())
-//			instanceLocation.release();
-//		instanceLocation.set(new URL("file", null, System.getProperty("user.home") + "/scouter-workspace-test"), false);
-		
+
+		String lastUsedPath = WorkspaceManager.getInstance().getLastUsedWorkspacePath();
+		if (lastUsedPath != null) {
+			String currentPath = instanceLocation.getURL().getFile();
+			if (!normalizePath(currentPath).equals(normalizePath(lastUsedPath))
+					&& new File(lastUsedPath).isDirectory()) {
+				String commandLine = buildRestoreCommandLine(lastUsedPath);
+				System.setProperty("eclipse.exitdata", commandLine);
+				return EXIT_RELAUNCH;
+			}
+		}
+
 		String workspaceRootName = instanceLocation.getURL().getFile();
 		WorkspaceManager.getInstance().registerCurrentWorkspace(workspaceRootName);
 		String importWorkingDirName = workspaceRootName + separator+ "import-working";
@@ -169,6 +177,48 @@ public class Application implements IApplication {
 			return IApplication.EXIT_RESTART;
 		}
 		return IApplication.EXIT_OK;
+	}
+
+	private String buildRestoreCommandLine(String newWorkspacePath) {
+		String property = System.getProperty("eclipse.commands");
+		if (property == null) {
+			return "-data\n" + newWorkspacePath + "\n";
+		}
+
+		StringBuilder result = new StringBuilder();
+		String[] lines = property.split("\n");
+		boolean skipNext = false;
+		boolean dataFound = false;
+
+		for (String line : lines) {
+			if (skipNext) {
+				skipNext = false;
+				continue;
+			}
+			if ("-data".equals(line.trim())) {
+				result.append("-data\n");
+				result.append(newWorkspacePath).append("\n");
+				skipNext = true;
+				dataFound = true;
+			} else {
+				result.append(line).append("\n");
+			}
+		}
+
+		if (!dataFound) {
+			result.append("-data\n");
+			result.append(newWorkspacePath).append("\n");
+		}
+
+		return result.toString();
+	}
+
+	private static String normalizePath(String path) {
+		if (path == null) return "";
+		if (path.endsWith("/") || path.endsWith(File.separator)) {
+			path = path.substring(0, path.length() - 1);
+		}
+		return path;
 	}
 
 	public void stop() {
