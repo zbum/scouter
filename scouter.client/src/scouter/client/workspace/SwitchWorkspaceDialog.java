@@ -184,6 +184,7 @@ public class SwitchWorkspaceDialog extends TitleAreaDialog {
 			}
 		}
 		WorkspaceManager.getInstance().addWorkspace(path, dir.getName());
+		WorkspaceManager.getInstance().setLastUsed(path);
 		selectedPath = path;
 		super.okPressed();
 	}
